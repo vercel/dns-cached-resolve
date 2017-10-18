@@ -1,5 +1,5 @@
 {
-  "name": "@zeit/dnsresolve",
+  "name": "@zeit/dns-cached-resolve",
   "version": "0.1.0",
   "description": "Caching DNS resolve",
   "main": "index.js",
