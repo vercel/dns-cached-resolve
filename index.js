@@ -1,4 +1,5 @@
 const dns = require('dns');
+const retry = require('async-retry');
 const LRU = require('lru-cache');
 
 const lruOptions = {
@@ -33,7 +34,9 @@ async function dnsResolve(host, { ipv6 = false, minimumCacheTime = 300 } = {}) {
   const ip = cache.get(host);
   if (ip) return ip;
 
-  const res = await resolve(host);
+  const res = await retry(() => {
+    return resolve(host);
+  }, { retries: 5 });
   const rec = res[Math.floor(Math.random() * res.length)];
   const ttl = Math.max(rec.ttl, minimumCacheTime);
   cache.set(host, rec.address, ttl * 1000);
