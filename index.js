@@ -2,8 +2,7 @@ const dns = require('dns');
 const LRU = require('lru-cache');
 
 const lruOptions = {
-  max: 100,
-  maxAge: 3600 * 1000
+  max: 100
 };
 const cache4 = LRU(lruOptions);
 const cache6 = LRU(lruOptions);
