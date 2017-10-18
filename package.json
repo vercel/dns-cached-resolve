@@ -1,0 +1,10 @@
+{
+  "name": "@zeit/dnsresolve",
+  "version": "0.1.0",
+  "description": "Caching DNS resolve",
+  "main": "index.js",
+  "author": "Olli Vanhoja",
+  "dependencies": {
+    "lru-cache": "4.1.1"
+  }
+}
