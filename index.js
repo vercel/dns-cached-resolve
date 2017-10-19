@@ -35,7 +35,9 @@ async function dnsResolve(host, ipv6) {
 
   const res = await resolve(host);
   const rec = res[Math.floor(Math.random() * res.length)];
-  cache.set(host, rec.address, rec.ttl * 1000);
+  if (rec.ttl > 0) {
+    cache.set(host, rec.address, rec.ttl * 1000);
+  }
   return rec.address;
 }
 module.exports = dnsResolve;
