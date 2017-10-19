@@ -2,8 +2,6 @@ const dns = require('dns');
 const retry = require('async-retry');
 const LRU = require('lru-cache');
 
-
-
 const lruOptions = {
   max: 500
 };
@@ -28,11 +26,14 @@ function resolve6(host) {
   });
 }
 
-async function dnsResolve(host, {
-  ipv6 = false,
-  minimumCacheTime = 300,
-  retryOpts = { minTimeout: 10, retries: 3, factor: 5 }
-} = {}) {
+async function dnsResolve(
+  host,
+  {
+    ipv6 = false,
+    minimumCacheTime = 300,
+    retryOpts = { minTimeout: 10, retries: 3, factor: 5 }
+  } = {}
+) {
   const { cache, resolve } = ipv6
     ? { cache: cache6, resolve: resolve6 }
     : { cache: cache4, resolve: resolve4 };
