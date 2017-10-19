@@ -1,7 +1,6 @@
 const dns = require('dns');
 const LRU = require('lru-cache');
 
-const MINIMUM_CACHE_TIME = 10; // s
 const lruOptions = {
   max: 500
 };
@@ -26,7 +25,7 @@ function resolve6(host) {
   });
 }
 
-async function dnsResolve(host, ipv6) {
+async function dnsResolve(host, { ipv6 = false, minimumCacheTime = 300 } = {}) {
   const { cache, resolve } = ipv6
     ? { cache: cache6, resolve: resolve6 }
     : { cache: cache4, resolve: resolve4 };
@@ -36,7 +35,7 @@ async function dnsResolve(host, ipv6) {
 
   const res = await resolve(host);
   const rec = res[Math.floor(Math.random() * res.length)];
-  const ttl = Math.max(rec.ttl, MINIMUM_CACHE_TIME);
+  const ttl = Math.max(rec.ttl, minimumCacheTime);
   cache.set(host, rec.address, ttl * 1000);
   return rec.address;
 }
