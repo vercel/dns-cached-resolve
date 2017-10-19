@@ -3,7 +3,7 @@ const LRU = require('lru-cache');
 
 const MINIMUM_CACHE_TIME = 10; // s
 const lruOptions = {
-  max: 100
+  max: 500
 };
 const cache4 = LRU(lruOptions);
 const cache6 = LRU(lruOptions);
