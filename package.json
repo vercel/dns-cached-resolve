@@ -1,6 +1,6 @@
 {
   "name": "@zeit/dns-cached-resolve",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Caching DNS resolve",
   "main": "index.js",
   "author": "Olli Vanhoja",
