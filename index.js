@@ -1,4 +1,5 @@
 const dns = require('dns');
+const retry = require('async-retry');
 const LRU = require('lru-cache');
 
 const lruOptions = {
@@ -25,7 +26,14 @@ function resolve6(host) {
   });
 }
 
-async function dnsResolve(host, { ipv6 = false, minimumCacheTime = 300 } = {}) {
+async function dnsResolve(
+  host,
+  {
+    ipv6 = false,
+    minimumCacheTime = 300,
+    retryOpts = { minTimeout: 10, retries: 3, factor: 5 }
+  } = {}
+) {
   const { cache, resolve } = ipv6
     ? { cache: cache6, resolve: resolve6 }
     : { cache: cache4, resolve: resolve4 };
@@ -33,7 +41,9 @@ async function dnsResolve(host, { ipv6 = false, minimumCacheTime = 300 } = {}) {
   const ip = cache.get(host);
   if (ip) return ip;
 
-  const res = await resolve(host);
+  const res = await retry(() => {
+    return resolve(host);
+  }, retryOpts);
   const rec = res[Math.floor(Math.random() * res.length)];
   const ttl = Math.max(rec.ttl, minimumCacheTime);
   cache.set(host, rec.address, ttl * 1000);
