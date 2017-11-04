@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Caching DNS resolve",
   "scripts": {
-    "fmt": "prettier --single-quote --print-width=80 --write index.js"
+    "fmt": "prettier --single-quote --print-width=80 --write index.js",
+    "test": "node test/test.js"
   },
   "main": "index.js",
   "author": "Olli Vanhoja",
