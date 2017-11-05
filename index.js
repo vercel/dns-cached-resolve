@@ -1,4 +1,5 @@
 const dns = require('dns');
+const hostfile = require('@zeit/cached-hostfile');
 const retry = require('async-retry');
 const LRU = require('lru-cache');
 
@@ -10,6 +11,17 @@ const cache6 = LRU(lruOptions);
 
 function resolve4(host) {
   return new Promise((resolve, reject) => {
+    // Try to resolve from the hostfile
+    const localips = hostfile.resolve4(host);
+    if (localips) {
+      return resolve(localips.map(ip => {
+        return {
+          address: String(ip),
+          ttl: 0.5 // half a second
+        };
+      }));
+    }
+
     dns.resolve4(host, { ttl: true }, (err, res) => {
       if (err) return reject(err);
       resolve(res);
@@ -19,7 +31,18 @@ function resolve4(host) {
 
 function resolve6(host) {
   return new Promise((resolve, reject) => {
-    dns.resolve4(host, { ttl: true }, (err, res) => {
+    // Try to resolve from the hostfile
+    const localips = hostfile.resolve6(host);
+    if (localips) {
+      return resolve(localips.map(ip => {
+        return {
+          address: String(ip),
+          ttl: 0.5 // half a second
+        };
+      }));
+    }
+
+    dns.resolve6(host, { ttl: true }, (err, res) => {
       if (err) return reject(err);
       resolve(res);
     });
