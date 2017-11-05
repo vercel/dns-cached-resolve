@@ -2,8 +2,9 @@
 
 const dnsResolve = require('../index.js');
 
-const domain = 's3.amazonaws.com';
-async function run() {
+const domains = ['s3.amazonaws.com', 'zeit.co', 'localhost'];
+
+async function resolve(domain) {
   console.log(`dnsResolve("${domain}")`);
   for (let i = 0; i < 10; i++) {
     console.time('resolve');
@@ -11,4 +12,11 @@ async function run() {
     console.timeEnd('resolve');
   }
 }
+
+async function run() {
+  for (const domain of domains) {
+    await resolve(domain);
+  }
+}
+
 run().catch(console.error);
