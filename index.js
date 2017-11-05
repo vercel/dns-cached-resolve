@@ -3,6 +3,8 @@ const hostfile = require('@zeit/cached-hostfile');
 const retry = require('async-retry');
 const LRU = require('lru-cache');
 
+const HOSTFILE_RESULT_TTL = 0.5; // half a second
+
 const lruOptions = {
   max: 500
 };
@@ -17,7 +19,7 @@ function resolve4(host) {
       return resolve(localips.map(ip => {
         return {
           address: String(ip),
-          ttl: 0.5 // half a second
+          ttl: HOSTFILE_RESULT_TTL
         };
       }));
     }
@@ -37,7 +39,7 @@ function resolve6(host) {
       return resolve(localips.map(ip => {
         return {
           address: String(ip),
-          ttl: 0.5 // half a second
+          ttl: HOSTFILE_RESULT_TTL
         };
       }));
     }
