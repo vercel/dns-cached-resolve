@@ -11,7 +11,7 @@ const lruOptions = {
 const cache4 = LRU(lruOptions);
 const cache6 = LRU(lruOptions);
 
-function resolve4(host) {
+function resolve4(host, resolver) {
   return new Promise((resolve, reject) => {
     // Try to resolve from the hostfile
     const localips = hostfile.resolve4(host);
@@ -24,14 +24,14 @@ function resolve4(host) {
       }));
     }
 
-    dns.resolve4(host, { ttl: true }, (err, res) => {
+    resolver.resolve4(host, { ttl: true }, (err, res) => {
       if (err) return reject(err);
       resolve(res);
     });
   });
 }
 
-function resolve6(host) {
+function resolve6(host, resolver) {
   return new Promise((resolve, reject) => {
     // Try to resolve from the hostfile
     const localips = hostfile.resolve6(host);
@@ -44,7 +44,7 @@ function resolve6(host) {
       }));
     }
 
-    dns.resolve6(host, { ttl: true }, (err, res) => {
+    resolver.resolve6(host, { ttl: true }, (err, res) => {
       if (err) return reject(err);
       resolve(res);
     });
@@ -57,7 +57,8 @@ async function dnsResolve(
     ipv6 = false,
     minimumCacheTime = 300,
     refreshCache = false,
-    retryOpts = { minTimeout: 10, retries: 3, factor: 5 }
+    retryOpts = { minTimeout: 10, retries: 3, factor: 5 },
+    resolver = dns
   } = {}
 ) {
   const { cache, resolve } = ipv6
@@ -73,7 +74,7 @@ async function dnsResolve(
 
   const p = (async () => {
     const res = await retry(() => {
-      return resolve(host);
+      return resolve(host, resolver);
     }, retryOpts);
     const rec = res[Math.floor(Math.random() * res.length)];
     const ttl = Math.max(rec.ttl, minimumCacheTime);
