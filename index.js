@@ -82,6 +82,6 @@ async function dnsResolve(
   })();
   cache.set(host, p, 5000);
 
-  return await p;
+  return p;
 }
 module.exports = dnsResolve;
