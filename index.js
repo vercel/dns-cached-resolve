@@ -56,6 +56,7 @@ async function dnsResolve(
   {
     ipv6 = false,
     minimumCacheTime = 300,
+    refreshCache = false,
     retryOpts = { minTimeout: 10, retries: 3, factor: 5 }
   } = {}
 ) {
@@ -63,8 +64,12 @@ async function dnsResolve(
     ? { cache: cache6, resolve: resolve6 }
     : { cache: cache4, resolve: resolve4 };
 
-  const ip = cache.get(host);
-  if (ip) return ip;
+  if (refreshCache) {
+    cache.del(host);
+  } else {
+    const ip = cache.get(host);
+    if (ip) return ip;
+  }
 
   const res = await retry(() => {
     return resolve(host);
