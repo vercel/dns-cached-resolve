@@ -68,15 +68,20 @@ async function dnsResolve(
     cache.del(host);
   } else {
     const ip = cache.get(host);
-    if (ip) return ip;
+    if (ip) return await ip;
   }
 
-  const res = await retry(() => {
-    return resolve(host);
-  }, retryOpts);
-  const rec = res[Math.floor(Math.random() * res.length)];
-  const ttl = Math.max(rec.ttl, minimumCacheTime);
-  cache.set(host, rec.address, ttl * 1000);
-  return rec.address;
+  const p = (async () => {
+    const res = await retry(() => {
+      return resolve(host);
+    }, retryOpts);
+    const rec = res[Math.floor(Math.random() * res.length)];
+    const ttl = Math.max(rec.ttl, minimumCacheTime);
+    cache.set(host, rec.address, ttl * 1000);
+    return rec.address;
+  })();
+  cache.set(host, p, 5000);
+
+  return await p;
 }
 module.exports = dnsResolve;
