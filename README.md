@@ -1,6 +1,8 @@
 Caching DNS Resolver
 ====================
 
+Cache DNS A and AAAA record resolutions.
+
 ## Example
 
 **index.js**
