@@ -10,6 +10,14 @@
     "resolve",
     "lookup"
   ],
+  "homepage": "https://github.com/zeit/dns-cached-resolve",
+  "bugs": {
+    "url": "https://github.com/zeit/dns-cached-resolve/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeit/dns-cached-resolve.git"
+  },
   "scripts": {
     "fmt": "prettier --single-quote --print-width=80 --write index.js",
     "test": "jest"
