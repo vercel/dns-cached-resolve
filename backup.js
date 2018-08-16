@@ -9,7 +9,7 @@ function startReadingDns (key, host, opts = {}, resolve) {
   }).catch((error) => {
     error.host = host;
     error.opts = opts;
-    console.log('not thrown', error);
+    console.error('not thrown', error);
   }).then(() => {
     const t = setTimeout(() => {
       startReadingDns(key, host, opts);
