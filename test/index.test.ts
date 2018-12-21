@@ -1,15 +1,13 @@
-let dnsResolve;
-const {Resolver} = require('dns')
+import { Resolver } from 'dns'
+import dnsResolve, { setupCache } from '../src/dns-resolve';
 
 const domains = ['s3.amazonaws.com', 'zeit.co'];
 
-beforeEach(() => {
-  dnsResolve = require('../index.js');
-});
+beforeEach(setupCache);
 
 let resnr = 0;
 
-async function resolve(domain, options = {}) {
+async function resolve(domain: string, options = {}) {
   console.log(`dnsResolve("${domain}")`);
 
   const line = `resolve ${resnr++}`;

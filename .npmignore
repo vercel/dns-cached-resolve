@@ -1,0 +1,6 @@
+.circleci
+/test
+/src
+tsconfig.json
+.editorconfig
+LICENSE
