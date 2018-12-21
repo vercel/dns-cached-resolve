@@ -3,6 +3,4 @@
 /src
 tsconfig.json
 .editorconfig
-Dockerfile
-now.json
 LICENSE
