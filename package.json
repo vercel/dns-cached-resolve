@@ -1,6 +1,6 @@
 {
   "name": "@zeit/dns-cached-resolve",
-  "version": "1.3.1",
+  "version": "2.0.0",
   "description": "Caching DNS resolve",
   "license": "MIT",
   "author": "Olli Vanhoja",
