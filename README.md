@@ -1,6 +1,8 @@
 Caching DNS Resolver
 ====================
 
+[![CircleCI](https://circleci.com/gh/zeit/dns-cached-resolve.svg?style=svg)](https://circleci.com/gh/zeit/dns-cached-resolve)
+
 Cache DNS A and AAAA record resolutions.
 
 ## Example
