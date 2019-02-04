@@ -51,6 +51,6 @@ export default async function dnsResolve(host: string, options: Options = {}) {
 }
 
 export function setupCache() {
-  cache4 = LRU(lruOptions);
-  cache6 = LRU(lruOptions);
+  cache4 = new LRU(lruOptions);
+  cache6 = new LRU(lruOptions);
 }
