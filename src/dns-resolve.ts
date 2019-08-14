@@ -16,6 +16,17 @@ type Options = {
   resolver?: typeof dns;
 };
 
+class DNSError extends Error {
+    code: string;
+    hostname: string;
+
+    constructor(code: string, hostname: string) {
+        super(`queryA ${code} ${hostname}`);
+        this.code = code;
+        this.hostname = hostname;
+    }
+}
+
 setupCache();
 
 export default async function dnsResolve(host: string, options: Options = {}) {
@@ -41,6 +52,9 @@ export default async function dnsResolve(host: string, options: Options = {}) {
   const p = (async () => {
     const res = await retry(() => resolve(host, resolver), retryOpts);
     const rec = res[Math.floor(Math.random() * res.length)];
+    if (!rec) {
+        throw new DNSError('ENOTFOUND', host);
+    }
     const ttl = Math.max(rec.ttl, minimumCacheTime);
     cache.set(host, rec.address, ttl * 1000);
     return rec.address;
