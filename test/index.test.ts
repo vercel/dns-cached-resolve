@@ -45,3 +45,8 @@ test('concurrent resolves', async () => {
     expect(res.every((v) => v === first)).toBeTruthy();
   }
 }, 10000);
+
+test('Proper error on CNAME pointing to nowhere', async () => {
+  const p = dnsResolve('dns-cached-resolve-test.zeit.rocks');
+  await expect(p).rejects.toThrow('queryA ENOTFOUND dns-cached-resolve-test.zeit.rocks');
+}, 10000);
