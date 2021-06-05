@@ -17,17 +17,19 @@ type Options = {
 };
 
 class DNSError extends Error {
-    code: string;
-    hostname: string;
+  code: string;
+  hostname: string;
 
-    constructor(code: string, hostname: string) {
-        super(`queryA ${code} ${hostname}`);
-        this.code = code;
-        this.hostname = hostname;
-    }
+  constructor(code: string, hostname: string) {
+    super(`queryA ${code} ${hostname}`);
+    this.code = code;
+    this.hostname = hostname;
+  }
 }
 
 setupCache();
+
+const localhostRegex = /(?:\.|^)localhost\.?$/;
 
 export default async function dnsResolve(host: string, options: Options = {}) {
   const {
@@ -37,6 +39,10 @@ export default async function dnsResolve(host: string, options: Options = {}) {
     retryOpts = { minTimeout: 10, retries: 3, factor: 5 },
     resolver = dns
   } = options;
+
+  if (localhostRegex.test(host)) {
+    return ipv6 ? '::1' : '127.0.0.1';
+  }
 
   const { cache, resolve } = ipv6
     ? { cache: cache6, resolve: resolve6 }
@@ -53,7 +59,7 @@ export default async function dnsResolve(host: string, options: Options = {}) {
     const res = await retry(() => resolve(host, resolver), retryOpts);
     const rec = res[Math.floor(Math.random() * res.length)];
     if (!rec) {
-        throw new DNSError('ENOTFOUND', host);
+      throw new DNSError('ENOTFOUND', host);
     }
     const ttl = Math.max(rec.ttl, minimumCacheTime);
     cache.set(host, rec.address, ttl * 1000);
