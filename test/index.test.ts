@@ -1,7 +1,7 @@
 import { Resolver } from 'dns'
 import dnsResolve, { setupCache } from '../src/dns-resolve';
 
-const domains = ['s3.amazonaws.com', 'zeit.co'];
+const domains = ['s3.amazonaws.com', 'vercel.com'];
 
 beforeEach(setupCache);
 
@@ -47,6 +47,16 @@ test('concurrent resolves', async () => {
 }, 10000);
 
 test('Proper error on CNAME pointing to nowhere', async () => {
-  const p = dnsResolve('dns-cached-resolve-test.zeit.rocks');
-  await expect(p).rejects.toThrow('queryA ENOTFOUND dns-cached-resolve-test.zeit.rocks');
+  const p = dnsResolve('dns-cached-resolve-test.vercel.rocks');
+  await expect(p).rejects.toThrow('queryA ENOTFOUND dns-cached-resolve-test.vercel.rocks');
+}, 10000);
+
+test('Resolve localhost v4', async () => {
+  const ip = await dnsResolve('localhost');
+  await expect(ip).toEqual('127.0.0.1');
+}, 10000);
+
+test('Resolve localhost v6', async () => {
+  const ip = await dnsResolve('localhost', { ipv6: true });
+  await expect(ip).toEqual('::1');
 }, 10000);

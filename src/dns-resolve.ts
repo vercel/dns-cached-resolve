@@ -29,6 +29,8 @@ class DNSError extends Error {
 
 setupCache();
 
+const localhostRegex = /(?:\.|^)localhost\.?$/;
+
 export default async function dnsResolve(host: string, options: Options = {}) {
   const {
     ipv6 = false,
@@ -37,6 +39,10 @@ export default async function dnsResolve(host: string, options: Options = {}) {
     retryOpts = { minTimeout: 10, retries: 3, factor: 5 },
     resolver = dns
   } = options;
+
+	if (localhostRegex.test(host)) {
+		return ipv6 ? '::1' : '127.0.0.1';
+	}
 
   const { cache, resolve } = ipv6
     ? { cache: cache6, resolve: resolve6 }
