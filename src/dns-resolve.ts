@@ -34,7 +34,7 @@ const localhostRegex = /(?:\.|^)localhost\.?$/;
 export default async function dnsResolve(host: string, options: Options = {}) {
   const {
     ipv6 = false,
-    minimumCacheTime = 300,
+    minimumCacheTime = 60,
     refreshCache = false,
     retryOpts = { minTimeout: 10, retries: 3, factor: 5 },
     resolver = dns
